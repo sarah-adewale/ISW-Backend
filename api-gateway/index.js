@@ -1,12 +1,21 @@
 import express from 'express';
 import httpProxy from 'http-proxy';
-
+import cors from 'cors';
 
 const port = process.env.PORT || 4000;
 
 const proxy = httpProxy.createProxyServer();
 const app = express();
 
+// Allow requests from localhost
+const corsOptions = {
+  origin: 'http://localhost:4000', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+
+app.use(cors(corsOptions));
 
 // Route requests to the auth service
 app.use("/api/users", (req, res) => {

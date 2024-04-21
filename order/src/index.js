@@ -4,7 +4,7 @@ import connectDB from "../config/db.js";
 import cookieParser from "cookie-parser";
 import orderRoutes from "./routes/orderRoutes.js";
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
-
+import cors from 'cors';
 
 dotenv.config()
 
@@ -12,6 +12,15 @@ const port = process.env.PORT || 4200;
 
 connectDB()
 const app = express();
+
+// Allow requests from localhost
+const corsOptions = {
+    origin: 'http://localhost:4300', // Replace 3000 with your client's port if different
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  };
+  
+  app.use(cors(corsOptions));
 
 // body parser middleware
 app.use(express.json())
