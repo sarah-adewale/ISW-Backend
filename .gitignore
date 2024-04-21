@@ -5,8 +5,11 @@
 /node_modules
 /api-gateway/node_modules/
 /auth/node_modules/
+/order/node_modules/
 /api-gateway/.env/
+/order/.env
 /auth/config/.env
+
 /.pnp
 .pnp.js
 
