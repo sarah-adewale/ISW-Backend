@@ -1,5 +1,3 @@
-// controllers/productController.js
-
 import * as productService from '../services/productService.js';
 import Joi from 'joi';
 
@@ -11,13 +9,14 @@ const productSchema = Joi.object({
     category: Joi.string(),
     quantity: Joi.number().min(0).required(),
     batchNumber: Joi.string(),
-    dateSold: Joi.date()
+    dateSold: Joi.date(),
+    imageUrl: Joi.string().uri({ scheme: ['http', 'https'] }) // Validates that imageUrl is a valid URL
 });
 
 // Create a new product
 export const createProduct = async (req, res) => {
     const data = req.body;
-    
+
     // Validate the data using the Joi schema
     const { error } = productSchema.validate(data);
     if (error) {
@@ -25,21 +24,22 @@ export const createProduct = async (req, res) => {
     }
 
     try {
+        // Create the product with the data
         const product = await productService.createProduct(data);
         res.status(201).json(product);
     } catch (error) {
         // Check if the error is due to uniqueness constraint violation
         if (error.code === 11000 && error.keyPattern && error.keyPattern.name === 1) {
-            return res.status(400).json({ message: 'Product name must be unique as a product already exist with such name' });
+            return res.status(400).json({ message: 'Product name must be unique as a product already exists with such name' });
         }
         res.status(400).json({ message: error.message });
     }
 };
+
 // Get a product by ID
 export const getProductById = async (req, res) => {
     try {
         const productId = req.params.id;
-        console.log(req.params);
         const product = await productService.getProductById(productId);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -62,6 +62,7 @@ export const updateProduct = async (req, res) => {
             return res.status(400).json({ message: error.details[0].message });
         }
         
+        // Update the product with the newData
         const updatedProduct = await productService.updateProduct(productId, newData);
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found' });
@@ -70,7 +71,7 @@ export const updateProduct = async (req, res) => {
     } catch (error) {
         // Check if the error is due to uniqueness constraint violation
         if (error.code === 11000 && error.keyPattern && error.keyPattern.name === 1) {
-            return res.status(400).json({ message: 'Product name must be unique as a product already exist with such name' });
+            return res.status(400).json({ message: 'Product name must be unique as a product already exists with such name' });
         }
         res.status(500).json({ message: error.message });
     }
@@ -89,6 +90,7 @@ export const deleteProduct = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 // Get all products
 export const getAllProducts = async (req, res) => {
     try {
