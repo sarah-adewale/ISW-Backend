@@ -14,7 +14,7 @@ connectDB()
 
 // Allow requests from localhost
 const corsOptions = {
-    origin: 'http://localhost:4200', // Replace 3000 with your client's port if different
+    origin: 'http://localhost:5173', // Replace 3000 with your client's port if different
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   };
