@@ -1,7 +1,6 @@
 import express from 'express';
 import httpProxy from 'http-proxy';
 import cors from 'cors';
-
 const port = process.env.PORT || 4000;
 
 const proxy = httpProxy.createProxyServer();
