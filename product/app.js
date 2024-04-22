@@ -16,7 +16,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware to parse incoming request bodies
 app.use(bodyParser.json());
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 // Routes for categories
 app.use('/api/category', categoryRoutes);
