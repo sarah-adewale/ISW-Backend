@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Category from './category.js'; // Import Category model
 
 const { Schema } = mongoose;
 
@@ -26,8 +25,13 @@ const productSchema = new Schema({
         min: [0, 'Quantity must be a positive number'] // Minimum value of 0 with custom error message
     },
     batchNumber: String,
-    dateSold: Date
+    dateSold: Date,
+    imageUrl: {
+        type: String,
+        match: /^https?:\/\/.+/ // Ensure the imageUrl field is a valid URL
+    }
 });
+
 // Create an index on the name field
 productSchema.index({ name: 1 });
 
