@@ -37,4 +37,15 @@ const admin = (req, res, next) => {
   }
 };
 
-export { protect, admin };
+// User must be a shopper
+
+const shopper = (req, res, next) => {
+  if (req.user && req.user.isShopper) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error('Not authorized as a shopper');
+  }
+};
+
+export { protect, admin, shopper };
