@@ -18,6 +18,7 @@ const authUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isShopper: user.isShopper,
     });
   } else {
     res.status(401);
@@ -52,6 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isShopper: user.isShopper,
     });
   } else {
     res.status(400);
@@ -79,6 +81,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isShopper: user.isShopper,
     });
   } else {
     res.status(404);
@@ -107,6 +110,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
+      isShopper: updatedUser.isShopper,
     });
   } else {
     res.status(404);
@@ -164,6 +168,7 @@ const updateUser = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     user.isAdmin = Boolean(req.body.isAdmin);
+    user.isShopper = Boolean(req.body.isShopper);
 
     const updatedUser = await user.save();
 
@@ -172,6 +177,7 @@ const updateUser = asyncHandler(async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
+      isShopper: updatedUser.isShopper,
     });
   } else {
     res.status(404);
