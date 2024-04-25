@@ -11,5 +11,7 @@ router.post('/', categoryController.createCategory);
 router.get('/:id', categoryController.getCategoryById);
 router.put('/:id', categoryController.updateCategory);
 router.delete('/:id', categoryController.deleteCategory);
+router.get('/:id/products', categoryController.getProductsByCategory);
+
 
 export default router;

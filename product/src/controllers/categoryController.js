@@ -7,6 +7,18 @@ const categorySchema = Joi.object({
     description: Joi.string()
 });
 
+// Get products by category
+export const getProductsByCategory = async (req, res) => {
+    try {
+        const categoryId = req.params.id;
+        const products = await categoryService.getProductsByCategory(categoryId);
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 // Create a new category
 export const createCategory = async (req, res) => {
     try {

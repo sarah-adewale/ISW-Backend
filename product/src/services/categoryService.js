@@ -26,3 +26,13 @@ export const updateCategory = async (categoryId, newData) => {
 export const deleteCategory = async (categoryId) => {
     return await Category.findByIdAndDelete(categoryId);
 };
+
+// Get products by category
+export const getProductsByCategory = async (categoryId) => {
+    try {
+        const products = await Product.find({ category: categoryId });
+        return products;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
