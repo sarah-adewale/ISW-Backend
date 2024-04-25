@@ -1,6 +1,26 @@
 import asyncHandler from '../middleware/asyncHandler.js';
 import generateToken from '../utils/generateToken.js';
 import User from '../models/userModel.js';
+import Seller from '../models/sellerModel.js';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import multer from 'multer';
+
+
+// Set up multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const fileName = `${uuidv4()}${path.extname(file.originalname)}`;
+    cb(null, fileName);
+  },
+});
+
+// File upload middleware
+const upload = multer({ storage });
+
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -28,8 +48,10 @@ const authUser = asyncHandler(async (req, res) => {
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
+// Register a new user (seller or regular user)
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role, colorPreference, fontPreference } = req.body;
+  let { logo } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -42,22 +64,55 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    role,
   });
 
   if (user) {
-    generateToken(res, user._id);
+    // If the user is a seller, create a seller profile
+    if (role === 'seller') {
+      // Handle file upload for logo
+      upload.single('logo')(req, res, async (err) => {
+        if (err) {
+          res.status(500);
+          throw new Error('Error uploading file');
+        }
 
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-    });
+        if (req.file) {
+          logo = `/uploads/${req.file.filename}`;
+        }
+
+        await Seller.create({
+          user: user._id,
+          logo,
+          colorPreference,
+          fontPreference,
+        });
+
+        generateToken(res, user._id);
+
+        res.status(201).json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        });
+      });
+    } else {
+      generateToken(res, user._id);
+
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      });
+    }
   } else {
     res.status(400);
     throw new Error('Invalid user data');
   }
 });
+
 
 // @desc    Logout user / clear cookie
 // @route   POST /api/users/logout
