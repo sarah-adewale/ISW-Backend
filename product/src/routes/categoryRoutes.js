@@ -1,17 +1,15 @@
 import express from 'express';
 import * as categoryController from '../controllers/categoryController.js';
-// import productRoutes from './productRoutes.js';
-// import transactionRoutes from './transactionRoutes.js';
+import { protect, admin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Routes for categories
-router.get('/', categoryController.getAllCategories);
-router.post('/', categoryController.createCategory);
-router.get('/:id', categoryController.getCategoryById);
-router.put('/:id', categoryController.updateCategory);
-router.delete('/:id', categoryController.deleteCategory);
+router.route('/').get(categoryController.getAllCategories).post(protect, admin, categoryController.createCategory);
+router
+  .route('/:id')
+  .get(categoryController.getCategoryById)
+  .put(protect, admin, categoryController.updateCategory)
+  .delete(protect, admin, categoryController.deleteCategory);
 router.get('/:id/products', categoryController.getProductsByCategory);
-
 
 export default router;

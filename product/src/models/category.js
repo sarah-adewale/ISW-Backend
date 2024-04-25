@@ -1,17 +1,20 @@
-
-// models/Category.js
-
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
 
 const categorySchema = new Schema({
     name: {
         type: String,
         required: true,
-        minlength: 1, // Minimum length of 1 character
-        unique: true // Enforce uniqueness
+        minlength: 1,
+        unique: true
     },
-    description: String
+    description: String,
+    createdBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 });
 
 // Create an index on the name field

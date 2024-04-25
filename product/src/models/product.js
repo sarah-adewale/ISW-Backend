@@ -1,5 +1,3 @@
-// models/product.js
-
 import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
@@ -18,7 +16,8 @@ const productSchema = new Schema({
         min: 0
     },
     category: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
         required: true
     },
     quantity: {
@@ -26,11 +25,14 @@ const productSchema = new Schema({
         required: true,
         min: [0, 'Quantity must be a positive number']
     },
-    batchNumber: String,
-    dateSold: Date,
+    seller: {
+        type: Schema.Types.ObjectId,
+        ref: 'Seller',
+        required: true
+    },
     imageUrl: {
         type: String,
-        match: /^https?:\/\/.+/
+        required: true
     }
 });
 

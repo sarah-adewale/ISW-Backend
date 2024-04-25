@@ -22,8 +22,17 @@ export const getAllProducts = async () => {
     return await Product.find();
 };
 
-
 // Delete a product by ID
 export const deleteProduct = async (productId) => {
     return await Product.findByIdAndDelete(productId);
+};
+
+// Get products by category
+export const getProductsByCategory = async (categoryId) => {
+    try {
+        const products = await Product.find({ category: categoryId });
+        return products;
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };
